@@ -1,0 +1,42 @@
+{% load static %}
+
+<footer>
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-item">
+                    <div class="footer-logo"><img src="{% static './assets/logo.png' %}" alt="logo"></div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                </div>
+                <div class="footer-catolog">
+                    <div class="footer-catalog-title">Catalog</div>
+                    <div class="footer-catalog-group">
+                        <div class="footer-catalog-items">
+                            <ul>
+                                <li><a href="{% url 'category_products' 'playstation' %}"><img src="{% static './assets/playstation-logotype.png' %}"
+                                            alt="PlayStation">PlayStation</a></li>
+                                <li><a href="{% url 'category_products' 'nintendo-switch' %}"><img src="{% static './assets/console.png' %}" alt="Nintendo Switch">Nintendo
+                                        Switch</a></li>
+                                <li><a href="{% url 'category_products' 'xbox' %}"><img src="{% static './assets/xbox-logo.png' %}" alt="Xbox">Xbox</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-catalog-items">
+                            <ul>
+                                <li><a href="{% url 'category_products' 'gamers-setup' %}"><img src="{% static './assets/computer.png' %}" alt="Gamers' setup">Gamers' setup</a>
+                                </li>
+                                <li><a href="{% url 'category_products' 'gadgets' %}"><img src="{% static './assets/gadget.png' %}" alt="Gadgets">Gadgets</a></li>
+                                <li><a href="{% url 'category_products' 'gamers-setup' %}"><img src="{% static './assets/virtual-reality.png' %}" alt="Virtual Reality">Virtual
+                                        Reality</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-social">
+                    <div class="footer-social-title">Social network</div>
+                    <div class="footer-social-group">
+                        <div class="footer-social-box"><a href=""><i class="fa-brands fa-instagram"></i></a></div>
+                        <div class="footer-social-box"><a href=""><i class="fa-brands fa-facebook-f"></i></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>

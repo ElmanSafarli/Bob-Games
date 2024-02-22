@@ -1,0 +1,15 @@
+{% load static %}
+    <div class="nav-bottom">
+                    <div class="dropdown-list">
+                        {% for category in categories %}
+                            <div class="dropdown">
+                                <button class="dropdown-button"><img src="{{ category.image.url }}" alt="{{ category.name }}"><a href="{% url 'category_products' category.slug %}">{{ category.name }}</a></button>
+                                <div class="dropdown-content">
+                                    {% for subcategory in category.subcategories.all %}
+                                        <a href="{% url 'subcategory_products' subcategory.slug %}">{{ subcategory.name }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>

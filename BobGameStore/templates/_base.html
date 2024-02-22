@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bob Games</title>
+
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+</head>
+
+
+<body>
+
+    {% block body %}{% endblock %}
+
+    {% include 'include/footer.html' %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/d17c83b3d5.js" crossorigin="anonymous"></script>
+
+    <script>
+        {% block scriptBlock %}{% endblock %}
+    </script>
+</body>
