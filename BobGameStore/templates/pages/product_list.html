@@ -134,11 +134,13 @@
                             <div class="sorting-item-title">Genre</div>
                             <div class="sorting-item-values">
                                  {% for genre in genres %}
-                                    <label class="sorting-item-value">
-                                        <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in request.GET.genres %}checked{% endif %}>
-                                        <div class="checkmark"></div>
-                                        <p>{{ genre }}</p>
-                                    </label>
+                                    {% if genre %}
+                                        <label class="sorting-item-value">
+                                            <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in request.GET.genres %}checked{% endif %}>
+                                            <div class="checkmark"></div>
+                                            <p>{{ genre }}</p>
+                                        </label>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -173,13 +175,15 @@
                             <ul class="swiper-container scrolling-container mobile-filter">
                                 <div class="swiper-wrapper">
                                     {% for genre in genres %}
-                                    <div class="swiper-slide element">
-                                        <label class="sorting-item-value">
-                                            <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in request.GET.genres %}checked{% endif %}>
-                                            <div class="checkmark"></div>
-                                            <p>{{ genre }}</p>
-                                        </label>
-                                    </div>
+                                        {% if genre %}
+                                            <div class="swiper-slide element">
+                                                <label class="sorting-item-value">
+                                                    <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in request.GET.genres %}checked{% endif %}>
+                                                    <div class="checkmark"></div>
+                                                    <p>{{ genre }}</p>
+                                                </label>
+                                            </div>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </ul>
@@ -212,7 +216,7 @@
                             <div class="product-img"
                                  style="background: url('{{ product.image1.url }}');">
                             </div>
-                            <div class="product-title"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title }}</a></div>
+                            <div class="product-title"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title|slice:":28" }}{% if product.title|length > 32 %}...{% endif %}</a></div>
                             <div class="product-bottom">
                                 <div class="product-price">${{ product.price }}</div>
                                 <div class="product-btn">

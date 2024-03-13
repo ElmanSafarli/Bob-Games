@@ -2103,13 +2103,17 @@ body {
     }
 
     .checkout {
-        height: 190vh;
+        height: auto;
     }
 }
 
 @media (max-width: 700px) {
 
     /* Category home */
+    .category-content {
+        margin: 144px 4% 60px 4%;
+    }
+
     .category-box {
         width: 100%;
     }
@@ -2231,10 +2235,6 @@ body {
     }
 
     /* Category home */
-    .category-content {
-        margin: 144px 4% 60px 4%;
-    }
-
     .vrC, .electronicsC, .consoleC, .nintendoC, .gamerC {
         width: 80% !important;
         height: auto !important;
@@ -2277,18 +2277,26 @@ body {
         grid-row-gap: 138px;
     }
 
+    .category-title {
+        font-size: 22px;
+    }
+
+    .category-top a {
+        font-size: 14px;
+    }
+
     /* Trending */
     .product-img {
-        height: 186px;
+        height: 148px;
         border-radius: 6px;
     }
 
     .product-title a {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .product-price {
-        font-size: 20px;
+        font-size: 16px;
     }
 
     .product-btn button i {
@@ -2311,7 +2319,7 @@ body {
 
     /* Contact us */
     .contact-item {
-        margin: 26px 0;
+        margin: 26px 10px;
     }
 
     .contact-icon img {
@@ -2410,5 +2418,15 @@ body {
     /* Category products page */
     .category-products-group {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Checkout */
+    .checkout-logo{
+        width: 70px;
+        height: 58px;
+    }
+
+    .checkout-title{
+        font-size: 20px;
     }
 }
