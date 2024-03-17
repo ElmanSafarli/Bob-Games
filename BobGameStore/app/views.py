@@ -61,6 +61,13 @@ class ProductListView(ListView):
             # Use Q objects to filter products within the price range
             queryset = queryset.filter(Q(price__gte=min_price) & Q(price__lte=max_price))
 
+        # Handle sorting by price
+        sort_option = self.request.GET.get('sort')
+        if sort_option == 'price_asc':
+            queryset = queryset.order_by('price')
+        elif sort_option == 'price_desc':
+            queryset = queryset.order_by('-price')
+
         return queryset
 
 class CategoryProductListView(ListView):
@@ -118,86 +125,8 @@ class ProductDetailView(DetailView):
         return context
 
 
-def cart_view(request):
-    if request.user.is_authenticated:
-        # If the user is authenticated, fetch cart items for the user
-        cart_items = Cart.objects.filter(user=request.user)
-    else:
-        # If the user is anonymous, fetch cart items using the session ID
-        session = Session.objects.get(session_key=request.session.session_key)
-        session_id = session.session_key if session else None
-        cart_items = Cart.objects.filter(session_id=session_id)
-
-    context = {'cart_items': cart_items}
-    context['categories'] = Category.objects.all()
-    context['subcategories'] = Subcategory.objects.all()
-    return render(request, 'pages/view_cart.html', context)
-
-@require_POST
-def add_to_cart(request, product_id):
-    product = Product.objects.get(pk=product_id)
-    quantity = int(request.GET.get('quantity', 1))
-
-    if request.user.is_authenticated:
-        user = request.user
-        session_id = None
-    else:
-        # For anonymous users, use session_key to identify the cart
-        session_id = request.session.session_key
-        user = None
-
-    cart_item, created = Cart.objects.get_or_create(user=user, session_id=session_id, product=product)
-
-    if not created:
-        cart_item.quantity += quantity
-        cart_item.save()
-
-    return JsonResponse({'status': 'success'})
-
-@require_POST
-def remove_from_cart(request, product_id):
-    try:
-        if request.user.is_authenticated:
-            # If the user is authenticated, remove the product from the cart for the user
-            cart_item = Cart.objects.get(user=request.user, product__id=product_id)
-        else:
-            # If the user is anonymous, remove the product from the cart using the session ID
-            session_id = request.session.session_key
-            cart_item = Cart.objects.get(session_id=session_id, product__id=product_id)
-
-        # Remove the cart item
-        cart_item.delete()
-
-        return JsonResponse({'status': 'success'})
-    except Cart.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Product not found in the cart'})
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
-
-
-
-def checkout(request):
-    # Get products from the user's cart
-    cart_items = get_cart_items(request)
-
-    if cart_items:
-        # Calculate the total price
-        total_price = sum(item.product.price * item.quantity for item in cart_items)
-    else:
-        total_price = 0
-
-    context = {'cart_items': cart_items, 'total_price': total_price}
-    return render(request, 'pages/checkout.html', context)
-
-
-def get_cart_items(request):
-    if request.user.is_authenticated:
-        # If the user is authenticated, fetch cart items for the user
-        return Cart.objects.filter(user=request.user)
-    else:
-        # If the user is anonymous, fetch cart items using the session ID
-        session_id = request.session.session_key
-        return Cart.objects.filter(session_id=session_id)
+def checkout_view(request):
+    return render(request, 'pages/checkout.html')
 
 
 @csrf_exempt
@@ -206,14 +135,20 @@ def send_to_telegram_view(request):
         try:
             received_data = json.loads(request.body)
             contact_details = received_data.get('contact', {})
-            cart_items = get_cart_items(request)
+            cart_items = received_data.get('cart', [])
+
+            print(cart_items)
 
             # Prepare the message for Telegram
             message = f"New Order Details:\n\nContact Information:\nName: {contact_details.get('name')}\nSurname: {contact_details.get('surname')}\nNumber: {contact_details.get('number')}\nAddress: {contact_details.get('address')}\n\nOrdered Items:\n"
 
             # Include details about the selected products
             for item in cart_items:
-                message += f"Product: {item.product.title}\nPrice: ${item.product.price}\nQuantity: {item.quantity}\n\n"
+                product_name = item.get('name', '')
+                product_price = item.get('price', 0.0)
+                product_quantity = item.get('quantity', 0)
+
+                message += f"Product: {product_name}\nPrice: ${product_price}\nQuantity: {product_quantity}\n\n"
 
             # Send message to Telegram
             send_to_telegram(message)

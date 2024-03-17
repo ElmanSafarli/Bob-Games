@@ -39,91 +39,16 @@
             <div class="checkout-r">
                 <div class="checkout-r-item">
                     <div class="checkout-title">Products</div>
-                    <div class="checkout-products">
-                        {% for product_info in cart_items %}
-                            <div class="checkout-product">
-                                <div class="checkout-product-img"><img src="{{ product_info.product.image1.url }}" alt="product"></div>
-                                <div class="checkout-product-r">
-                                    <div class="checkout-product-title">{{ product_info.product.title }}</div>
-                                    <div class="checkout-product-rb">
-                                        <div class="checkout-product-price">${{ product_info.product.price }}</div>
-                                        <div class="checkout-product-quantity">{{ product_info.quantity }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
+                    <div class="checkout-products" id='selected-products'>
+
                     </div>
                 </div>
                 <div class="checkout-rb-item">
-                    <div class="checkout-title">Total</div>
-                    <div class="checkout-totalPrice">${{ total_price }}</div>
+                    <div class="checkout-title" >Total</div>
+                    <div class="checkout-totalPrice" id="total-price"></div>
                 </div>
             </div>
         </div>
     </div>
-
-{% endblock %}
-
-{% block scriptBlock %}
-    document.getElementById('checkout-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
-        sendTelegramData(); // Call your function to send data to Telegram
-    });
-   function sendTelegramData() {
-        var contactName = document.getElementById('first_name').value;
-        var contactSurname = document.getElementById('last_name').value;
-        var contactNumber = document.getElementById('phone').value;
-        var contactAddress = document.getElementById('address').value;
-        var contactCity = document.getElementById('city').value;
-        var contactPostalCode = document.getElementById('postal_code').value;
-
-        var contactDetails = {
-            name: contactName,
-            surname: contactSurname,
-            number: contactNumber,
-            address: contactAddress,
-            adrdress: contactAddress,
-            city: contactCity,
-            postal: contactPostalCode,
-        };
-
-        var csrfToken = getCookie('csrftoken');
-        if (csrfToken) {
-
-            // Send both contact details and cart data to the server
-            fetch('/send-to-telegram/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,
-                },
-                body: JSON.stringify({
-                    contact: contactDetails,
-                }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        alert('Your order is accepted! Our manager will contact you soon :)');
-                    } else {
-                        alert('The order has not been sent. Contact us by phone (+994)00-000-12-12');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('There was an error sending your order :(');
-                });
-
-
-        } else {
-            console.error('CSRF token not found.');
-        }
-    }
-
-    function getCookie(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length === 2) return parts.pop().split(";").shift();
-    }
 
 {% endblock %}

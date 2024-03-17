@@ -41,7 +41,7 @@
                             </label>
                         </div>
                         <div class="nav-phone"><a href=""><i class="fa-solid fa-phone"></i></a></div>
-                        <div class="nav-cart"><a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                        <div class="nav-cart"><button  id="showBlockButton"><i class="fa-solid fa-cart-shopping"></i></button></div>
                     </div>
                     <div class="sidebar">
                         <input type="checkbox" id="toggleSidebar">
@@ -82,8 +82,7 @@
                                 </div>
                                 <div class="nav-phone"><a href="" style="background-color: #fff;"><i
                                             class="fa-solid fa-phone" style="color: #4D4D52;"></i></a></div>
-                                <div class="nav-cart"><a href="{% url 'cart' %}" style="background-color: #fff;"><i
-                                            class="fa-solid fa-cart-shopping" style="color: #4D4D52;"></i></a></div>
+                                <div class="nav-cart"><button  id="showBlockButtonPhone" style="background: #fff; color: #4D4D52"><i class="fa-solid fa-cart-shopping"></i></button></div>
                             </div>
                             <div class="sidebar-items">
                                 <div class="aside">
@@ -98,7 +97,7 @@
                                                 <ul class="droplist">
                                                     {% for subcategory in category.subcategories.all %}
                                                         <li>
-                                                            <a href="#">{{ subcategory.name }}</a>
+                                                            <a href="{% url 'subcategory_products' subcategory.slug %}">{{ subcategory.name }}</a>
                                                         </li>
                                                     {% endfor %}
                                                 </ul>
@@ -115,112 +114,113 @@
         </div>
     </nav>
 
+    <div id="hiddenBlock" class="hidden-block">
+        {% include 'include/cart.html' %}
+    </div>
+
     <section>
         <div class="all-products-page">
-            <div class="all-products-content">
-                <div class="all-products-sorting">
-                    <div class="sorting-box">
-                    <form method="get" action="{% url 'products-list' %}" id="product-filter-form">
-                        <div class="sorting-item">
-                            <div class="sorting-item-title">Price</div>
-                            <div class="sorting-item-price-values">
-                                <input type="number" name="min_price">
-                                <div class="sort-price-hr"></div>
-                                <input type="number" name="max_price">
-                            </div>
-                        </div>
+                        <div class="forMobile">
+                            <div class="filterMobile">
 
-                        <div class="sorting-item">
-                            <div class="sorting-item-title">Genre</div>
-                            <div class="sorting-item-values">
-                                 {% for genre in genres %}
-                                    {% if genre %}
-                                        <label class="sorting-item-value">
-                                            <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in request.GET.genres %}checked{% endif %}>
-                                            <div class="checkmark"></div>
-                                            <p>{{ genre }}</p>
-                                        </label>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
+                                <div class="filterBtnMobile filterMobile__titles">
+                                    <button id="openFiltersMobile">
+                                        <i class="fa-solid fa-filter"></i>
+                                        <p>Filter</p>
+                                    </button>
 
+                                    <div class="filter-side-menu" id="filtersSideMenu">
+                                        <form method="get" action="{% url 'products-list' %}" id="product-filter-form">
+                                        <div class="filter-side-menu__area"></div>
+                                        <div class="filter-side-menu__container">
 
-                        <div class="sorting-item">
-                            <div class="sorting-item-title">Year</div>
-                            <div class="sorting-item-values">
-                                {% for year in years %}
-                                    <label class="sorting-item-value">
-                                        <input type="checkbox" name="years" value="{{ year }}" {% if year in request.GET.years %}checked{% endif %}>
-                                        <div class="checkmark"></div>
-                                        <p>{{ year }}</p>
-                                    </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                     </form>
-                     <form method="get" action="{% url 'products-list' %}" id="mobile-filter-form">
-                         <div class="all-filter-item">
-                            <div class="sorting-item-title">Price</div>
-                            <div class="sorting-item-price-values">
-                                <input type="number" name="min_price">
-                                <div class="sort-price-hr"></div>
-                                <input type="number" name="max_price">
-                            </div>
-                        </div>
-                        <!-- Mobile Filter Block -->
-                        <div class="all-filter-item">
-                            <div class="all-filter-item-title">Genre</div>
-                            <div class="all-filter-item-hr"></div>
-                            <ul class="swiper-container scrolling-container mobile-filter">
-                                <div class="swiper-wrapper">
-                                    {% for genre in genres %}
-                                        {% if genre %}
-                                            <div class="swiper-slide element">
-                                                <label class="sorting-item-value">
-                                                    <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in request.GET.genres %}checked{% endif %}>
-                                                    <div class="checkmark"></div>
-                                                    <p>{{ genre }}</p>
-                                                </label>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </ul>
-                        </div>
+                                                <div class="filter-side-menu__content">
+                                                    <div class="filter-side-menu__header-container">
+                                                        <div class="filter-side-menu__closeBtn">
+                                                            <button id="closeResultFiltersMobile">
+                                                                <i class="fa-solid fa-xmark"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="filter-side-menu__header">
+                                                            <p>Filter</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="filter-side-menu__body">
+                                                        <div class="filterBody">
+                                                            <div class="form">
+                                                                <div class="filterBody__container">
+                                                                    <div class="filterBodyBlock">
+                                                                        <div class="sorting-item-title">Genre</div>
+                                                                        <div class="sorting-item-values">
+                                                                            {% for genre in genres %}
+                                                                                {% if genre %}
+                                                                                    <label class="sorting-item-value">
+                                                                                        <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in request.GET.genres %}checked{% endif %}>
+                                                                                        <div class="checkmark"></div>
+                                                                                        <p>{{ genre }}</p>
+                                                                                    </label>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="filterBodyBlock">
+                                                                <div class="sorting-item-title">Year</div>
+                                                                <div class="sorting-item-values">
+                                                                    {% for year in years %}
+                                                                        <label class="sorting-item-value">
+                                                                            <input type="checkbox" name="years" value="{{ year }}" {% if year in request.GET.years %}checked{% endif %}>
+                                                                            <div class="checkmark"></div>
+                                                                            <p>{{ year }}</p>
+                                                                        </label>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="filterBodyBlock">
+                                                                    <div class="sorting-item-title">Sort by price</div>
+                                                                    <div class="sorting-item-values">
+                                                                        <select id="sort-select" name="sort">
+                                                                            <option value="">Select an option</option>
+                                                                            <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>Low to High</option>
+                                                                            <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>High to Low</option>
+                                                                        </select>
+                                                                        <input type="submit" value="Sort" style="display: none;">
+                                                                    </div>
+                                                            </div>
+                                                            <div class="filterBodyBlock">
 
-                        <div class="all-filter-item">
-                            <div class="all-filter-item-title">Year</div>
-                            <div class="all-filter-item-hr"></div>
-                            <ul class="swiper-container scrolling-container mobile-filter">
-                                <div class="swiper-wrapper">
-                                    {% for year in years %}
-                                    <div class="swiper-slide element">
-                                        <label class="sorting-item-value">
-                                            <input type="checkbox" name="years" value="{{ year }}" {% if year in request.GET.years %}checked{% endif %}>
-                                            <div class="checkmark"></div>
-                                            <p>{{ year }}</p>
-                                        </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="filter-side-menu__footer">
+                                                    <div class="filter-side-menu__footer-btn-container">
+                                                        <button class="filter-side-menu__btn filter-side-menu__btn_blue" id="closeFiltersMobile">
+                                                            See the result </button>
+                                                    </div>
+                                                </div>
+
+                                        </div>
+                                        </form>
                                     </div>
-                                    {% endfor %}
                                 </div>
-                            </ul>
+                            </div>
                         </div>
-                    </form>
 
-                    </div>
-                </div>
+            <div class="all-products-content">
+
                 <div class="all-products-group">
                     {% for product in products %}
-                        <div class="product-box">
-                            <div class="product-img"
+                        <div class="product-box menu-item" data-menu-item-id="{{ product.id }}">
+                            <div class="product-img sellers-box-img"
                                  style="background: url('{{ product.image1.url }}');">
                             </div>
-                            <div class="product-title"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title|slice:":28" }}{% if product.title|length > 32 %}...{% endif %}</a></div>
+                            <div class="product-title sellers-box-title" data-menu-item-name="{{ product.title }}"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title|slice:":28" }}{% if product.title|length > 32 %}...{% endif %}</a></div>
                             <div class="product-bottom">
-                                <div class="product-price">${{ product.price }}</div>
+                                <div class="product-price sellers-box-price" data-menu-item-price="{{ product.price }}">{{ product.price }}</div>
                                 <div class="product-btn">
-                                    <button class="add-to-cart-btn" data-product-id="{{ product.id }}">
+                                    <button class="add-to-cart-btn addToCartBtn" data-menu-item="{{ product.id }}">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                     </button>
                                 </div>
@@ -235,233 +235,3 @@
 {% endblock %}
 
 
-{% block scriptBlock %}
-
-    document.addEventListener('DOMContentLoaded', function () {
-    const productButtons = document.querySelectorAll('.add-to-cart-btn');
-    const sessionID = "{{ request.session.session_key }}"; // Get the session ID from the server-side template
-    const cartTotal = document.getElementById('cart-total');
-
-    productButtons.forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.preventDefault();
-
-            // Get the product ID from the clicked button
-            const productId = button.dataset.productId;
-
-            // Get the quantity, you can adjust this based on your requirements
-            const quantity = 1;  // You may allow users to input quantity or set it to a default value
-
-            // Send an AJAX request to add the product to the cart
-            fetch(`/add-to-cart/${productId}/?quantity=${quantity}&session_id=${sessionID}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken'),  // Include CSRF token
-                },
-                body: JSON.stringify({ quantity }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    // Handle success, you may show a notification or update the UI
-                    console.log('Product added to cart successfully!');
-                } else {
-                    // Handle failure
-                    console.error('Failed to add product to cart.', data.message || 'Unknown error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            })
-            .finally(() => {
-                // Optional: Perform any cleanup or additional actions
-            });
-        });
-    });
-
-    // Function to get CSRF token from cookies
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-});
-
-     document.addEventListener('DOMContentLoaded', function () {
-        const themeToggle = document.querySelector('#theme-toggle');
-
-        // Function to set the theme based on user preference
-        const setTheme = (darkMode) => {
-            document.documentElement.classList.toggle('dark-mode', darkMode);
-            themeToggle.checked = darkMode; // Set the checked property
-        };
-
-        // Function to save user preference in local storage
-        const saveThemePreference = (darkMode) => {
-            localStorage.setItem('darkMode', darkMode);
-        };
-
-        // Function to load user preference from local storage
-        const loadThemePreference = () => {
-            return JSON.parse(localStorage.getItem('darkMode')) || false;
-        };
-
-        // Initialize theme based on user preference or default to light mode
-        setTheme(loadThemePreference());
-
-        // Set up event listener for theme toggle
-        themeToggle.addEventListener('change', function () {
-            const isDarkMode = themeToggle.checked;
-            setTheme(isDarkMode);
-            saveThemePreference(isDarkMode);
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const themeToggle = document.querySelector('#sidebar-theme-toggle');
-
-        // Function to set the theme based on user preference
-        const setTheme = (darkMode) => {
-            document.documentElement.classList.toggle('dark-mode', darkMode);
-            themeToggle.checked = darkMode; // Set the checked property
-        };
-
-        // Function to save user preference in local storage
-        const saveThemePreference = (darkMode) => {
-            localStorage.setItem('darkMode', darkMode);
-        };
-
-        // Function to load user preference from local storage
-        const loadThemePreference = () => {
-            return JSON.parse(localStorage.getItem('darkMode')) || false;
-        };
-
-        // Initialize theme based on user preference or default to light mode
-        setTheme(loadThemePreference());
-
-        // Set up event listener for theme toggle
-        themeToggle.addEventListener('change', function () {
-            const isDarkMode = themeToggle.checked;
-            setTheme(isDarkMode);
-            saveThemePreference(isDarkMode);
-        });
-    });
-
-
-    // JavaScript to handle checkbox state changes and submit the form with a delay for the price section
-    function handleFilterForm(filterForm, formInputs) {
-        let updateTimer;  // Variable to store the timer ID
-
-        formInputs.forEach(input => {
-            input.addEventListener('change', () => {
-                // Clear the existing timer
-                clearTimeout(updateTimer);
-
-                // Set a new timer only for the price section
-                updateTimer = setTimeout(() => {
-                    // Create a new URLSearchParams object
-                    const params = new URLSearchParams();
-
-                    // Iterate over the form inputs to gather selected values
-                    formInputs.forEach(formInput => {
-                        if ((formInput.type === 'checkbox' && formInput.checked) || (formInput.type === 'number' && formInput.value !== '')) {
-                            params.append(formInput.name, formInput.value);
-                        }
-                    });
-
-                    // Handle minimum and maximum price values
-                    const minPriceInput = filterForm.querySelector('input[name="min_price"]');
-                    const maxPriceInput = filterForm.querySelector('input[name="max_price"]');
-                    const minPrice = minPriceInput.value;
-                    const maxPrice = maxPriceInput.value;
-
-                    // Set default value for minimum price to 0 if only maximum price is entered
-                    if (maxPrice !== '' && (minPrice === '' || isNaN(minPrice))) {
-                        minPriceInput.value = 0;
-                        params.set('min_price', 0);
-                    }
-
-                    // Add minimum and maximum price to URLSearchParams if values are valid
-                    if (minPrice !== '' && !isNaN(minPrice)) {
-                        params.append('min_price', minPrice);
-                    }
-                    if (maxPrice !== '' && !isNaN(maxPrice)) {
-                        params.append('max_price', maxPrice);
-                    }
-
-                    // Get the current URL and update the search parameters
-                    const currentUrl = new URL(window.location.href);
-                    currentUrl.search = params.toString();
-
-                    // Set the form action to the updated URL
-                    filterForm.setAttribute('action', currentUrl.toString());
-
-                    // Submit the form
-                    filterForm.submit();
-                }, input.name.includes('price') ? 1000 : 0); // Use 0 delay for other sections, adjust the delay time for the price section as needed
-            });
-        });
-    }
-
-    // Add this function to check if a value exists in the array
-    function isInArray(value, array) {
-        return array.includes(value);
-    }
-
-    // Add this function to check the checkboxes based on values in request.GET
-    function checkCheckboxes(formInputs) {
-        formInputs.forEach(formInput => {
-            if (formInput.type === 'checkbox' && isInArray(formInput.value, window.location.search)) {
-                formInput.checked = true;
-            }
-        });
-    }
-
-    // Get the product filter form and inputs
-    const filterForm = document.getElementById('product-filter-form');
-    const formInputs = filterForm.querySelectorAll('input[type="checkbox"], input[type="number"]');
-
-    // Call functions to handle checkbox changes and check checkboxes on page load
-    handleFilterForm(filterForm, formInputs);
-    checkCheckboxes(formInputs);
-
-    // Get the mobile filter form and inputs
-    const mobileFilterForm = document.getElementById('mobile-filter-form');
-    const mobileFormInputs = mobileFilterForm.querySelectorAll('input[type="checkbox"], input[type="number"]');
-
-    // Call functions to handle checkbox changes and check checkboxes on page load for mobile form
-    handleFilterForm(mobileFilterForm, mobileFormInputs);
-    checkCheckboxes(mobileFormInputs);
-
-    if (document.querySelector(".drop")) {
-        const lists = document.querySelectorAll(".drop");
-        dropList(lists);
-
-        function dropList(els) {
-            els.forEach((el) => {
-                el.addEventListener("click", (e) => {
-                    const clickedList = e.currentTarget;
-                    const content = clickedList.nextElementSibling;
-
-                    // Close all other dropdowns
-                    lists.forEach((list) => {
-                        if (list !== clickedList) {
-                            list.classList.remove("show");
-                            list.nextElementSibling.style.maxHeight = null;
-                        }
-                    });
-
-                    // Toggle the clicked dropdown
-                    clickedList.classList.toggle("show");
-
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                    }
-                });
-            });
-        }
-    }
-{% endblock %}

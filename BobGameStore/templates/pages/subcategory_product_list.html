@@ -41,7 +41,7 @@
                             </label>
                         </div>
                         <div class="nav-phone"><a href=""><i class="fa-solid fa-phone"></i></a></div>
-                        <div class="nav-cart"><a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                        <div class="nav-cart"><button  id="showBlockButton"><i class="fa-solid fa-cart-shopping"></i></button></div>
                     </div>
                     <div class="sidebar">
                         <input type="checkbox" id="toggleSidebar">
@@ -82,8 +82,7 @@
                                 </div>
                                 <div class="nav-phone"><a href="" style="background-color: #fff;"><i
                                             class="fa-solid fa-phone" style="color: #4D4D52;"></i></a></div>
-                                <div class="nav-cart"><a href="{% url 'cart' %}" style="background-color: #fff;"><i
-                                            class="fa-solid fa-cart-shopping" style="color: #4D4D52;"></i></a></div>
+                                <div class="nav-cart"><button  id="showBlockButtonPhone" style="background: #fff; color: #4D4D52"><i class="fa-solid fa-cart-shopping"></i></button></div>
                             </div>
                             <div class="sidebar-items">
                                 <div class="aside">
@@ -98,7 +97,7 @@
                                                 <ul class="droplist">
                                                     {% for subcategory in category.subcategories.all %}
                                                         <li>
-                                                            <a href="#">{{ subcategory.name }}</a>
+                                                            <a href="{% url 'subcategory_products' subcategory.slug %}">{{ subcategory.name }}</a>
                                                         </li>
                                                     {% endfor %}
                                                 </ul>
@@ -114,6 +113,10 @@
             </div>
         </div>
     </nav>
+
+<div id="hiddenBlock" class="hidden-block">
+        {% include 'include/cart.html' %}
+    </div>
 
     <section>
         <div class="category-all-products-page">
@@ -145,149 +148,4 @@
     </section>
 
 
-{% endblock %}
-
-{% block scriptBlock %}
-
-    document.addEventListener('DOMContentLoaded', function () {
-    const productButtons = document.querySelectorAll('.add-to-cart-btn');
-    const sessionID = "{{ request.session.session_key }}"; // Get the session ID from the server-side template
-    const cartTotal = document.getElementById('cart-total');
-
-    productButtons.forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.preventDefault();
-
-            // Get the product ID from the clicked button
-            const productId = button.dataset.productId;
-
-            // Get the quantity, you can adjust this based on your requirements
-            const quantity = 1;  // You may allow users to input quantity or set it to a default value
-
-            // Send an AJAX request to add the product to the cart
-            fetch(`/add-to-cart/${productId}/?quantity=${quantity}&session_id=${sessionID}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken'),  // Include CSRF token
-                },
-                body: JSON.stringify({ quantity }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    // Handle success, you may show a notification or update the UI
-                    console.log('Product added to cart successfully!');
-                } else {
-                    // Handle failure
-                    console.error('Failed to add product to cart.', data.message || 'Unknown error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            })
-            .finally(() => {
-                // Optional: Perform any cleanup or additional actions
-            });
-        });
-    });
-
-    // Function to get CSRF token from cookies
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-});
-
-     document.addEventListener('DOMContentLoaded', function () {
-        const themeToggle = document.querySelector('#theme-toggle');
-
-        // Function to set the theme based on user preference
-        const setTheme = (darkMode) => {
-            document.documentElement.classList.toggle('dark-mode', darkMode);
-            themeToggle.checked = darkMode; // Set the checked property
-        };
-
-        // Function to save user preference in local storage
-        const saveThemePreference = (darkMode) => {
-            localStorage.setItem('darkMode', darkMode);
-        };
-
-        // Function to load user preference from local storage
-        const loadThemePreference = () => {
-            return JSON.parse(localStorage.getItem('darkMode')) || false;
-        };
-
-        // Initialize theme based on user preference or default to light mode
-        setTheme(loadThemePreference());
-
-        // Set up event listener for theme toggle
-        themeToggle.addEventListener('change', function () {
-            const isDarkMode = themeToggle.checked;
-            setTheme(isDarkMode);
-            saveThemePreference(isDarkMode);
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const themeToggle = document.querySelector('#sidebar-theme-toggle');
-
-        // Function to set the theme based on user preference
-        const setTheme = (darkMode) => {
-            document.documentElement.classList.toggle('dark-mode', darkMode);
-            themeToggle.checked = darkMode; // Set the checked property
-        };
-
-        // Function to save user preference in local storage
-        const saveThemePreference = (darkMode) => {
-            localStorage.setItem('darkMode', darkMode);
-        };
-
-        // Function to load user preference from local storage
-        const loadThemePreference = () => {
-            return JSON.parse(localStorage.getItem('darkMode')) || false;
-        };
-
-        // Initialize theme based on user preference or default to light mode
-        setTheme(loadThemePreference());
-
-        // Set up event listener for theme toggle
-        themeToggle.addEventListener('change', function () {
-            const isDarkMode = themeToggle.checked;
-            setTheme(isDarkMode);
-            saveThemePreference(isDarkMode);
-        });
-    });
-
-    if (document.querySelector(".drop")) {
-        const lists = document.querySelectorAll(".drop");
-        dropList(lists);
-
-        function dropList(els) {
-            els.forEach((el) => {
-                el.addEventListener("click", (e) => {
-                    const clickedList = e.currentTarget;
-                    const content = clickedList.nextElementSibling;
-
-                    // Close all other dropdowns
-                    lists.forEach((list) => {
-                        if (list !== clickedList) {
-                            list.classList.remove("show");
-                            list.nextElementSibling.style.maxHeight = null;
-                        }
-                    });
-
-                    // Toggle the clicked dropdown
-                    clickedList.classList.toggle("show");
-
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                    }
-                });
-            });
-        }
-    }
 {% endblock %}

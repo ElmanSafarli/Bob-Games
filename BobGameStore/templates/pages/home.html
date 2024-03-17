@@ -41,7 +41,7 @@
                             </label>
                         </div>
                         <div class="nav-phone"><a href=""><i class="fa-solid fa-phone"></i></a></div>
-                        <div class="nav-cart"><a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                        <div class="nav-cart"><button  id="showBlockButton"><i class="fa-solid fa-cart-shopping"></i></button></div>
                     </div>
                     <div class="sidebar">
                         <input type="checkbox" id="toggleSidebar">
@@ -82,8 +82,7 @@
                                 </div>
                                 <div class="nav-phone"><a href="" style="background-color: #fff;"><i
                                             class="fa-solid fa-phone" style="color: #4D4D52;"></i></a></div>
-                                <div class="nav-cart"><a href="{% url 'cart' %}" style="background-color: #fff;"><i
-                                            class="fa-solid fa-cart-shopping" style="color: #4D4D52;"></i></a></div>
+                                <div class="nav-cart"><button  id="showBlockButtonPhone" style="background: #fff; color: #4D4D52"><i class="fa-solid fa-cart-shopping"></i></button></div>
                             </div>
                             <div class="sidebar-items">
                                 <div class="aside">
@@ -114,6 +113,10 @@
             </div>
         </div>
     </nav>
+
+  <div id="hiddenBlock" class="hidden-block">
+        {% include 'include/cart.html' %}
+    </div>
 
     <header>
         <div class="header">
