@@ -125,20 +125,20 @@
             {% if products %}
                 <div class="category-products-group">
                     {% for product in products %}
-                        <div class="product-box">
-                                    <div class="product-img"
-                                         style="background: url('{{ product.image1.url }}');">
-                                    </div>
-                                    <div class="product-title"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title }}</a></div>
-                                    <div class="product-bottom">
-                                        <div class="product-price">${{ product.price }}</div>
-                                        <div class="product-btn">
-                                            <button class="add-to-cart-btn" data-product-id="{{ product.id }}">
-                                                <i class="fa-solid fa-cart-shopping"></i>
-                                            </button>
-                                        </div>
-                                    </div>
+                       <div class="product-box menu-item" data-menu-item-id="{{ product.id }}">
+                            <div class="product-img sellers-box-img"
+                                 style="background: url('{{ product.image1.url }}');">
+                            </div>
+                            <div class="product-title sellers-box-title" data-menu-item-name="{{ product.title }}"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title|slice:":28" }}{% if product.title|length > 32 %}...{% endif %}</a></div>
+                            <div class="product-bottom">
+                                <div class="product-price sellers-box-price" data-menu-item-price="{{ product.price }}">{{ product.price }}</div>
+                                <div class="product-btn">
+                                    <button class="add-to-cart-btn addToCartBtn" data-menu-item="{{ product.id }}">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </button>
                                 </div>
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
             {% else %}

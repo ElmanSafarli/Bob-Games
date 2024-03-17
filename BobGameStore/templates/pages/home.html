@@ -215,16 +215,16 @@
             <div class="trending-content">
                 <div class="trending-title">Trending</div>
                 <div class="products-group">
-                    {% for recent_product in recent_products %}
-                        <div class="product-box">
-                            <div class="product-img"
-                                style="background: url('{{ recent_product.image1.url }}');">
+                    {% for product in recent_products %}
+                        <div class="product-box menu-item" data-menu-item-id="{{ product.id }}">
+                            <div class="product-img sellers-box-img"
+                                 style="background: url('{{ product.image1.url }}');">
                             </div>
-                            <div class="product-title"><a href="{% url 'product-detail' slug=recent_product.slug %}">{{ recent_product.title }}</a></div>
+                            <div class="product-title sellers-box-title" data-menu-item-name="{{ product.title }}"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title|slice:":28" }}{% if product.title|length > 32 %}...{% endif %}</a></div>
                             <div class="product-bottom">
-                                <div class="product-price">${{ recent_product.price }}</div>
+                                <div class="product-price sellers-box-price" data-menu-item-price="{{ product.price }}">{{ product.price }}</div>
                                 <div class="product-btn">
-                                    <button class="add-to-cart-btn" data-product-id="{{ recent_product.id }}">
+                                    <button class="add-to-cart-btn addToCartBtn" data-menu-item="{{ product.id }}">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                     </button>
                                 </div>
@@ -278,168 +278,4 @@
         </div>
     </section>
 
-{% endblock %}
-
-{% block scriptBlock %}
-    let currentSlide = 0;
-    const slider = document.getElementById('slider');
-    const dotsContainer = document.getElementById('dots-container');
-    const images = ['../media/home_page_images/header1.png', '../media/home_page_images/header2.png', '../media/home_page_images/header3.jpg', '../media/home_page_images/header4.jpg'];
-    const totalSlides = images.length;
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const themeToggle = document.querySelector('#theme-toggle');
-
-        // Function to set the theme based on user preference
-        const setTheme = (darkMode) => {
-            document.documentElement.classList.toggle('dark-mode', darkMode);
-            themeToggle.checked = darkMode; // Set the checked property
-        };
-
-        // Function to save user preference in local storage
-        const saveThemePreference = (darkMode) => {
-            localStorage.setItem('darkMode', darkMode);
-        };
-
-        // Function to load user preference from local storage
-        const loadThemePreference = () => {
-            return JSON.parse(localStorage.getItem('darkMode')) || false;
-        };
-
-        // Initialize theme based on user preference or default to light mode
-        setTheme(loadThemePreference());
-
-        // Set up event listener for theme toggle
-        themeToggle.addEventListener('change', function () {
-            const isDarkMode = themeToggle.checked;
-            setTheme(isDarkMode);
-            saveThemePreference(isDarkMode);
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const themeToggle = document.querySelector('#sidebar-theme-toggle');
-
-        // Function to set the theme based on user preference
-        const setTheme = (darkMode) => {
-            document.documentElement.classList.toggle('dark-mode', darkMode);
-            themeToggle.checked = darkMode; // Set the checked property
-        };
-
-        // Function to save user preference in local storage
-        const saveThemePreference = (darkMode) => {
-            localStorage.setItem('darkMode', darkMode);
-        };
-
-        // Function to load user preference from local storage
-        const loadThemePreference = () => {
-            return JSON.parse(localStorage.getItem('darkMode')) || false;
-        };
-
-        // Initialize theme based on user preference or default to light mode
-        setTheme(loadThemePreference());
-
-        // Set up event listener for theme toggle
-        themeToggle.addEventListener('change', function () {
-            const isDarkMode = themeToggle.checked;
-            setTheme(isDarkMode);
-            saveThemePreference(isDarkMode);
-        });
-    });
-
-
-    if (document.querySelector(".drop")) {
-        const lists = document.querySelectorAll(".drop");
-        dropList(lists);
-
-        function dropList(els) {
-            els.forEach((el) => {
-                el.addEventListener("click", (e) => {
-                    const clickedList = e.currentTarget;
-                    const content = clickedList.nextElementSibling;
-
-                    // Close all other dropdowns
-                    lists.forEach((list) => {
-                        if (list !== clickedList) {
-                            list.classList.remove("show");
-                            list.nextElementSibling.style.maxHeight = null;
-                        }
-                    });
-
-                    // Toggle the clicked dropdown
-                    clickedList.classList.toggle("show");
-
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                    }
-                });
-            });
-        }
-    }
-
-    function showSlide(index) {
-        const backgroundImage = `linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('${images[index]}')`;
-        slider.style.background = backgroundImage;
-        updateDots(index);
-    }
-
-    function updateDots(index) {
-        const dots = Array.from(dotsContainer.children);
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === index);
-        });
-    }
-
-    function createDots() {
-        for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            dot.addEventListener('click', () => showSlide(i));
-            dotsContainer.appendChild(dot);
-        }
-    }
-
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        showSlide(currentSlide);
-    }
-
-    function prevSlide() {
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        showSlide(currentSlide);
-    }
-
-    // Autoload next slide every 5 seconds (adjust as needed)
-    setInterval(nextSlide, 5000);
-
-    // Show initial slide and create dots
-    showSlide(currentSlide);
-    createDots();
-
-    function changeImage(imageSrc) {
-        document.getElementById('mainImage').src = imageSrc;
-    }
-
-    const detailImgMain = document.querySelector('.detail-img-main');
-    const detailImgMainImg = document.querySelector('.detail-img-main img');
-
-    detailImgMain.addEventListener('mousemove', handleMouseMove);
-    detailImgMain.addEventListener('mouseleave', handleMouseLeave);
-
-    function handleMouseMove(e) {
-        const { offsetWidth: width, offsetHeight: height } = detailImgMain;
-        const { offsetX: x, offsetY: y } = e;
-
-        const xPercent = (x / width) * 100;
-        const yPercent = (y / height) * 100;
-
-        detailImgMainImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-        detailImgMainImg.style.transform = `translate(-${xPercent}%, -${yPercent}%) scale(2)`;
-    }
-
-    function handleMouseLeave() {
-        detailImgMainImg.style.transform = 'translate(0, 0) scale(1)';
-    }
 {% endblock %}
