@@ -126,12 +126,14 @@
                 <div class="category-products-group">
                     {% for product in products %}
                        <div class="product-box menu-item" data-menu-item-id="{{ product.id }}">
-                            <div class="product-img sellers-box-img"
-                                 style="background: url('{{ product.image1.url }}');">
-                            </div>
+                             <a href="{% url 'product-detail' slug=product.slug %}">
+                                <div class="product-img sellers-box-img"
+                                     style="background: url('{{ product.image1.url }}');">
+                                </div>
+                            </a>
                             <div class="product-title sellers-box-title" data-menu-item-name="{{ product.title }}"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title|slice:":28" }}{% if product.title|length > 32 %}...{% endif %}</a></div>
                             <div class="product-bottom">
-                                <div class="product-price sellers-box-price" data-menu-item-price="{{ product.price }}">{{ product.price }}</div>
+                                <div class="product-price sellers-box-price" data-menu-item-price="{{ product.price }}"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.price }}</a></div>
                                 <div class="product-btn">
                                     <button class="add-to-cart-btn addToCartBtn" data-menu-item="{{ product.id }}">
                                         <i class="fa-solid fa-cart-shopping"></i>

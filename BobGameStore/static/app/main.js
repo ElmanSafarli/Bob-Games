@@ -177,32 +177,29 @@ function changeImage(imageSrc) {
     document.getElementById('mainImage').src = imageSrc;
 }
 
-const detailImgMain = document.querySelector('.detail-img-main');
-const detailImgMainImg = document.querySelector('.detail-img-main img');
+// const detailImgMain = document.querySelector('.detail-img-main');
+// const detailImgMainImg = document.querySelector('.detail-img-main img');
 
-if (detailImgMain) {
-    detailImgMain.addEventListener('mousemove', handleMouseMove);
-    detailImgMain.addEventListener('mouseleave', handleMouseLeave);
-}
-
-
-function handleMouseMove(e) {
-    const { offsetWidth: width, offsetHeight: height } = detailImgMain;
-    const { offsetX: x, offsetY: y } = e;
-
-    const xPercent = (x / width) * 100;
-    const yPercent = (y / height) * 100;
-
-    detailImgMainImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-    detailImgMainImg.style.transform = `translate(-${xPercent}%, -${yPercent}%) scale(2)`;
-}
-
-function handleMouseLeave() {
-    detailImgMainImg.style.transform = 'translate(0, 0) scale(1)';
-}
+// if (detailImgMain) {
+//     detailImgMain.addEventListener('mousemove', handleMouseMove);
+//     detailImgMain.addEventListener('mouseleave', handleMouseLeave);
+// }
 
 
+// function handleMouseMove(e) {
+//     const { offsetWidth: width, offsetHeight: height } = detailImgMain;
+//     const { offsetX: x, offsetY: y } = e;
 
+//     const xPercent = (x / width) * 100;
+//     const yPercent = (y / height) * 100;
+
+//     detailImgMainImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+//     detailImgMainImg.style.transform = `translate(-${xPercent}%, -${yPercent}%) scale(2)`;
+// }
+
+// function handleMouseLeave() {
+//     detailImgMainImg.style.transform = 'translate(0, 0) scale(1)';
+// }
 
 
 

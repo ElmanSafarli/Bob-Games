@@ -158,7 +158,7 @@
                         <div class="product-title-detail">{{ product.title }}</div>
                         <div class="product-order">
                             <div class="product-price-detail">${{ product.price }}</div>
-                            <div class="product-add"><button class="add-to-cart-btn" data-product-id="{{ product.id }}">Add to cart</button></div>
+                            <div class="product-add"><button class="add-to-cart-btn addToCartBtn" data-menu-item="{{ product.id }}">Add to cart</button></div>
                             <div class="product-buy"><button>Buy now</button></div>
                         </div>
                     </div>
@@ -175,20 +175,22 @@
                     <h1>You may also like</h1>
                     <div class="products-group">
                         {% for recent_product in recent_products %}
-                            <div class="product-box">
-                                <div class="product-img"
-                                    style="background: url('{{ recent_product.image1.url }}');">
+                            <div class="product-box menu-item" data-menu-item-id="{{ product.id }}">
+                            <a href="{% url 'product-detail' slug=product.slug %}">
+                                <div class="product-img sellers-box-img"
+                                     style="background: url('{{ product.image1.url }}');">
                                 </div>
-                                <div class="product-title"><a href="{% url 'product-detail' slug=recent_product.slug %}">{{ recent_product.title }}</a></div>
-                                <div class="product-bottom">
-                                    <div class="product-price">${{ recent_product.price }}</div>
-                                    <div class="product-btn">
-                                        <button class="add-to-cart-btn" data-product-id="{{ recent_product.id }}">
-                                            <i class="fa-solid fa-cart-shopping"></i>
-                                        </button>
-                                    </div>
+                            </a>
+                            <div class="product-title sellers-box-title" data-menu-item-name="{{ product.title }}"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.title|slice:":28" }}{% if product.title|length > 32 %}...{% endif %}</a></div>
+                            <div class="product-bottom">
+                                <div class="product-price sellers-box-price" data-menu-item-price="{{ product.price }}"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.price }}</a></div>
+                                <div class="product-btn">
+                                    <button class="add-to-cart-btn addToCartBtn" data-menu-item="{{ product.id }}">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </button>
                                 </div>
                             </div>
+                        </div>
                         {% endfor %}
                     </div>
                 </div>
