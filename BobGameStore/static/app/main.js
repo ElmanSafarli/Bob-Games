@@ -171,37 +171,9 @@ if (slider) {
 
 }
 
-
-
 function changeImage(imageSrc) {
     document.getElementById('mainImage').src = imageSrc;
 }
-
-// const detailImgMain = document.querySelector('.detail-img-main');
-// const detailImgMainImg = document.querySelector('.detail-img-main img');
-
-// if (detailImgMain) {
-//     detailImgMain.addEventListener('mousemove', handleMouseMove);
-//     detailImgMain.addEventListener('mouseleave', handleMouseLeave);
-// }
-
-
-// function handleMouseMove(e) {
-//     const { offsetWidth: width, offsetHeight: height } = detailImgMain;
-//     const { offsetX: x, offsetY: y } = e;
-
-//     const xPercent = (x / width) * 100;
-//     const yPercent = (y / height) * 100;
-
-//     detailImgMainImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-//     detailImgMainImg.style.transform = `translate(-${xPercent}%, -${yPercent}%) scale(2)`;
-// }
-
-// function handleMouseLeave() {
-//     detailImgMainImg.style.transform = 'translate(0, 0) scale(1)';
-// }
-
-
 
 function changeImage(imageSrc) {
     document.getElementById('mainImage').src = imageSrc;
@@ -215,24 +187,20 @@ const hideButton = document.getElementById('hideBlockButton');
 if (showButton) {
     showButton.addEventListener('click', function () {
         hiddenBlock.style.display = 'block';
-        // body.classList.add('blur-background');
     });
 
     hideButton.addEventListener('click', function () {
         hiddenBlock.style.display = 'none';
-        // body.classList.remove('blur-background');
     });
 }
 
 if (showBlockButtonPhone) {
     showBlockButtonPhone.addEventListener('click', function () {
         hiddenBlock.style.display = 'block';
-        // body.classList.add('blur-background');
     });
 
     hideButton.addEventListener('click', function () {
         hiddenBlock.style.display = 'none';
-        // body.classList.remove('blur-background');
     });
 }
 
@@ -250,111 +218,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const checkOutBtn = document.getElementById('.checkout-btn');
     const checkOutForm = document.getElementById('checkout-form')
-
-    // Get the product filter form and inputs
-    // const filterForm = document.getElementById('product-filter-form');
-    // const formInputs = filterForm.querySelectorAll('input[type="checkbox"], input[type="number"]');
-
-
-    // // JavaScript to handle checkbox state changes and submit the form with a delay for the price section
-    // function handleFilterForm(filterForm, formInputs) {
-    //     let updateTimer; // Variable to store the timer ID
-
-    //     formInputs.forEach(input => {
-    //         input.addEventListener('change', () => {
-    //             // Clear the existing timer
-    //             clearTimeout(updateTimer);
-
-    //             // Set a new timer only for the price section
-    //             updateTimer = setTimeout(() => {
-    //                 // Create a new URLSearchParams object
-    //                 const params = new URLSearchParams();
-
-    //                 // Iterate over the form inputs to gather selected values
-    //                 formInputs.forEach(formInput => {
-    //                     if ((formInput.type === 'checkbox' && formInput.checked) || (formInput.type === 'number' && formInput.value !== '')) {
-    //                         params.append(formInput.name, formInput.value);
-    //                     }
-    //                 });
-
-    //                 // Handle minimum and maximum price values
-    //                 const minPriceInput = filterForm.querySelector('input[name="min_price"]');
-    //                 const maxPriceInput = filterForm.querySelector('input[name="max_price"]');
-    //                 const minPrice = minPriceInput.value;
-    //                 const maxPrice = maxPriceInput.value;
-
-    //                 // Set default value for minimum price to 0 if only maximum price is entered
-    //                 if (maxPrice !== '' && (minPrice === '' || isNaN(minPrice))) {
-    //                     minPriceInput.value = 0;
-    //                     params.set('min_price', 0);
-    //                 }
-
-    //                 // Add minimum and maximum price to URLSearchParams if values are valid
-    //                 if (minPrice !== '' && !isNaN(minPrice)) {
-    //                     params.append('min_price', minPrice);
-    //                 }
-    //                 if (maxPrice !== '' && !isNaN(maxPrice)) {
-    //                     params.append('max_price', maxPrice);
-    //                 }
-
-    //                 // Get the current URL and update the search parameters
-    //                 const currentUrl = new URL(window.location.href);
-    //                 currentUrl.search = params.toString();
-
-    //                 // Set the form action to the updated URL
-    //                 filterForm.setAttribute('action', currentUrl.toString());
-
-    //                 // Submit the form
-    //                 filterForm.submit();
-    //             }, input.name.includes('price') ? 1000 : 0); // Use 0 delay for other sections, adjust the delay time for the price section as needed
-    //         });
-    //     });
-    // }
-
-    // // JavaScript to handle sorting by price
-    // function handleSorting(filterForm) {
-    //     const sortSelect = document.getElementById('sort-select');
-
-    //     sortSelect.addEventListener('change', () => {
-    //         const sortValue = sortSelect.value;
-
-    //         // Get the current URL
-    //         const currentUrl = new URL(window.location.href);
-
-    //         // Update the sorting parameter in URLSearchParams
-    //         currentUrl.searchParams.set('sort', sortValue);
-
-    //         // Set the form action to the updated URL
-    //         filterForm.setAttribute('action', currentUrl.toString());
-
-    //         // Submit the form
-    //         filterForm.submit();
-    //     });
-    // }
-
-    // // Add this function to check if a value exists in the array
-    // function isInArray(value, array) {
-    //     return array.includes(value);
-    // }
-
-    // // Add this function to check the checkboxes based on values in request.GET
-    // function checkCheckboxes(formInputs) {
-    //     formInputs.forEach(formInput => {
-    //         if (formInput.type === 'checkbox' && isInArray(formInput.value, window.location.search)) {
-    //             formInput.checked = true;
-    //         }
-    //     });
-    // }
-
-
-
-    // if (formInputs) {
-    //     // Call functions to handle checkbox changes and check checkboxes on page load
-    //     handleFilterForm(filterForm, formInputs);
-    //     checkCheckboxes(formInputs);
-    //     handleSorting(filterForm);
-    // }
-
 
     if (selectedProductsSection) {
         function displaySelectedProducts(cart, total_price) {
@@ -406,8 +269,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCartDisplay(cart);
     }
 
-
-
     function addToCart(itemId, itemName, itemPrice, itemImage) {
         var cart = JSON.parse(localStorage.getItem('cart')) || {};
         if (cart[itemId]) {
@@ -423,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('cart', JSON.stringify(cart));
         updateCartDisplay(cart);
     }
-
 
     function removeFromCart(itemId) {
         var cart = JSON.parse(localStorage.getItem('cart')) || {};
@@ -500,6 +360,22 @@ document.addEventListener('DOMContentLoaded', function () {
         totalPriceElement.textContent = 'Total Price: $' + totalPrice;
     }
 
+    document.querySelectorAll('.confirmBtn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var productBox = button.closest('.product-box');
+            var productId = productBox.getAttribute('data-menu-item-id');
+            var modal = document.getElementById('confirmModal-' + productId);
+            modal.classList.remove('hidden');
+        });
+    });
+    
+    document.querySelectorAll('.cancelBtn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var modal = button.closest('.fixed');  // Correctly select the modal element
+            modal.classList.add('hidden');
+        });
+    });
+    
     document.querySelectorAll('.addToCartBtn').forEach(function (button) {
         button.addEventListener('click', function () {
             var itemId = button.getAttribute('data-menu-item');
@@ -540,6 +416,9 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 console.error('Failed to add item to cart. Item name or price is missing.');
             }
+
+            var modal = button.closest('.fixed');  // Close the modal after adding to cart
+            modal.classList.add('hidden');
         });
     });
 
@@ -593,19 +472,6 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault(); // Prevent the default form submission
             sendTelegramData(); // Call your function to send data to Telegram
         });
-    }
-
-
-    function isDataValid() {
-        var contactName = document.getElementById('first_name').value;
-        var contactSurname = document.getElementById('last_name').value;
-        var contactNumber = document.getElementById('phone').value;
-        var contactAddress = document.getElementById('address').value;
-        var contactApartment = document.getElementById('apartment').value;
-        var contactCity = document.getElementById('city').value;
-        var contactPostalCode = document.getElementById('postal_code').value;
-
-        return contactName.trim() !== '' && contactNumber.trim() !== '';
     }
 
     function sendTelegramData() {
@@ -689,20 +555,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (parts.length === 2) return parts.pop().split(";").shift();
     }
 
-
-    // -------------------------------------------------------------
-
-
-
     if (showButton & hideButton) {
         showButton.addEventListener('click', function () {
             hiddenBlock.style.display = 'block';
-            // body.classList.add('blur-background');
         });
 
         hideButton.addEventListener('click', function () {
             hiddenBlock.style.display = 'none';
-            // body.classList.remove('blur-background');
         });
     }
 });

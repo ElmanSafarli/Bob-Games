@@ -1,15 +1,13 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView, ListView, DetailView
-from .models import Category, Subcategory, Product, Cart
+from .models import Category, Subcategory, Product
 from django.db.models import Q
-from django.contrib.sessions.models import Session
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 from django.conf import settings
-
+from django.core.paginator import Paginator
 
 class HomePage(TemplateView):
     template_name = 'pages/home.html'
@@ -26,20 +24,47 @@ class HomePage(TemplateView):
         return context
 
 class ProductListView(ListView):
-    model = Product
     template_name = 'pages/product_list.html'
-    context_object_name = 'products'
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        products = self.get_queryset()
+
+        # Pagination
+        paginator = Paginator(products, self.paginate_by)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['page_range'] = self.get_page_range(page_obj, paginator)
+        context['query_params'] = self.request.GET.copy()
 
         # Fetch distinct genres and years from the database
+        context['products'] = products
         context['genres'] = Product.objects.values_list('genre', flat=True).distinct().order_by('genre')
         context['years'] = Product.objects.values_list('year', flat=True).distinct().order_by('year')
         context['categories'] = Category.objects.all()
         context['subcategories'] = Subcategory.objects.all()
 
         return context
+    
+    def get_page_range(self, page_obj, paginator):
+        current_page = page_obj.number
+        total_pages = paginator.num_pages
+        page_range = []
+
+        if total_pages <= 10:
+            page_range = range(1, total_pages + 1)
+        else:
+            if current_page <= 6:
+                page_range = range(1, 9)
+            elif current_page > total_pages - 6:
+                page_range = range(total_pages - 8, total_pages + 1)
+            else:
+                page_range = range(current_page - 3, current_page + 4)
+
+        return page_range
 
     def get_queryset(self):
         queryset = Product.objects.all()
@@ -58,8 +83,7 @@ class ProductListView(ListView):
         min_price = self.request.GET.get('min_price')
         max_price = self.request.GET.get('max_price')
         if min_price and max_price:
-            # Use Q objects to filter products within the price range
-            queryset = queryset.filter(Q(price__gte=min_price) & Q(price__lte=max_price))
+            queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
 
         # Handle sorting by price
         sort_option = self.request.GET.get('sort')
@@ -70,41 +94,168 @@ class ProductListView(ListView):
 
         return queryset
 
+
 class CategoryProductListView(ListView):
-    model = Product
     template_name = 'pages/category_product_list.html'
-    context_object_name = 'products'
+    paginate_by = 12 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # Define category_slug
         category_slug = self.kwargs.get('category_slug')
+
+        products = self.get_queryset()
+        
+        # Pagination
+        paginator = Paginator(products, self.paginate_by)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['page_range'] = self.get_page_range(page_obj, paginator)
+        context['query_params'] = self.request.GET.copy()
+
+        # Fetch distinct genres and years from the database
+        context['products'] = products
+        context['genres'] = Product.objects.values_list('genre', flat=True).distinct().order_by('genre')
+        context['years'] = Product.objects.values_list('year', flat=True).distinct().order_by('year')
+
         context['category'] = get_object_or_404(Category, slug=category_slug)
         context['categories'] = Category.objects.all()
         context['subcategories'] = Subcategory.objects.all()
+        context['category_slug'] = category_slug 
+        
         return context
+
+    def get_page_range(self, page_obj, paginator):
+        current_page = page_obj.number
+        total_pages = paginator.num_pages
+        page_range = []
+
+        if total_pages <= 10:
+            page_range = range(1, total_pages + 1)
+        else:
+            if current_page <= 6:
+                page_range = range(1, 9)
+            elif current_page > total_pages - 6:
+                page_range = range(total_pages - 8, total_pages + 1)
+            else:
+                page_range = range(current_page - 3, current_page + 4)
+
+        return page_range
 
     def get_queryset(self):
         category_slug = self.kwargs.get('category_slug')
         category = get_object_or_404(Category, slug=category_slug)
-        return Product.objects.filter(subcategory__category=category)
+        queryset = Product.objects.filter(subcategory__category=category)
+
+        # Handle filters for genre
+        genres = self.request.GET.getlist('genres')
+        if genres:
+            queryset = queryset.filter(genre__in=genres)
+
+        # Handle filters for year
+        years = self.request.GET.getlist('years')
+        if years:
+            queryset = queryset.filter(year__in=years)
+
+        # Handle filters for price
+        min_price = self.request.GET.get('min_price')
+        max_price = self.request.GET.get('max_price')
+        if min_price and max_price:
+            queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
+
+        # Handle sorting by price
+        sort_option = self.request.GET.get('sort')
+        if sort_option == 'price_asc':
+            queryset = queryset.order_by('price')
+        elif sort_option == 'price_desc':
+            queryset = queryset.order_by('-price')
+
+        return queryset
+
+        
 
 class SubcategoryProductListView(ListView):
-    model = Product
     template_name = 'pages/subcategory_product_list.html'
-    context_object_name = 'products'
+    paginate_by = 12 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         subcategory_slug = self.kwargs.get('subcategory_slug')
+
+        products = self.get_queryset()
+        
+        # Pagination
+        paginator = Paginator(products, self.paginate_by)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['page_range'] = self.get_page_range(page_obj, paginator)
+        context['query_params'] = self.request.GET.copy()
+
+        # Fetch distinct genres and years from the database
+        context['products'] = products
+        context['genres'] = Product.objects.values_list('genre', flat=True).distinct().order_by('genre')
+        context['years'] = Product.objects.values_list('year', flat=True).distinct().order_by('year')
+
+
         context['subcategory'] = get_object_or_404(Subcategory, slug=subcategory_slug)
         context['categories'] = Category.objects.all()
         context['subcategories'] = Subcategory.objects.all()
+        context['subcategory_slug'] = subcategory_slug
+
         return context
+    
+    def get_page_range(self, page_obj, paginator):
+        current_page = page_obj.number
+        total_pages = paginator.num_pages
+        page_range = []
+
+        if total_pages <= 10:
+            page_range = range(1, total_pages + 1)
+        else:
+            if current_page <= 6:
+                page_range = range(1, 9)
+            elif current_page > total_pages - 6:
+                page_range = range(total_pages - 8, total_pages + 1)
+            else:
+                page_range = range(current_page - 3, current_page + 4)
+
+        return page_range
 
     def get_queryset(self):
         subcategory_slug = self.kwargs.get('subcategory_slug')
         subcategory = get_object_or_404(Subcategory, slug=subcategory_slug)
-        return Product.objects.filter(subcategory=subcategory)
+        queryset = Product.objects.filter(subcategory=subcategory)
+
+        # Handle filters for genre
+        genres = self.request.GET.getlist('genres')
+        if genres:
+            queryset = queryset.filter(genre__in=genres)
+
+        # Handle filters for year
+        years = self.request.GET.getlist('years')
+        if years:
+            queryset = queryset.filter(year__in=years)
+
+        # Handle filters for price
+        min_price = self.request.GET.get('min_price')
+        max_price = self.request.GET.get('max_price')
+        if min_price and max_price:
+            queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
+
+        # Handle sorting by price
+        sort_option = self.request.GET.get('sort')
+        if sort_option == 'price_asc':
+            queryset = queryset.order_by('price')
+        elif sort_option == 'price_desc':
+            queryset = queryset.order_by('-price')
+
+        return queryset
+    
 
 
 class ProductDetailView(DetailView):

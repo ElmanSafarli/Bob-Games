@@ -1,23 +1,29 @@
 {% load static %}
- <div class="cart-content cartContent" id="cartContent">
-            <div class="cart-top">
-                <div class="cart-close">
-                    <button id="hideBlockButton"><img src="{% static '/assets/cross.png' %}" alt="close"></button>
-                </div>
-            </div>
-            <div class="cart-products-list shopping-cart">
-                <div class="cart-items-list" id="cart-products"></div>
-            </div>
-                <div class="cart-bottom">
-                    <div class="cart-bottom-l">
-                        <div class="cart-total-count">THERE ARE <span></span> ITEMS IN YOUR CART</div>
-                        <div class="cart-total-price"><span id="total-price"></span></div>
-                    </div>
-                    <div class="cart-bottom-r">
-                        <a href="{% url 'checkout' %}">
-                            <div class="cart-bottom-cehkout"><img src="{% static './assets/box.png' %}" alt="box"> Proceed to checkout
-                            </div>
-                        </a>
-                    </div>
-                </div>
+<div class="cart-content cartContent rounded-lg bg-white shadow-md" id="cartContent">
+  <div class="cart-top flex items-center py-5 justify-end bg-gray-800 rounded-t-lg transition-all">
+    <div class="cart-close mr-3.5">
+      <button id="hideBlockButton" class="flex items-center justify-center rounded-lg bg-white border-none cursor-pointer transition-all">
+        <img src="{% static '/assets/cross.png' %}" alt="close" />
+      </button>
+    </div>
+  </div>
+  <div class="cart-products-list shopping-cart">
+    <div class="cart-items-list" id="cart-products"></div>
+  </div>
+  <div class="cart-bottom p-5 w-full bg-white shadow-md">
+    <div class="cart-bottom-l">
+      <div class="cart-total-count font-semibold text-gray-800 mb-4">
+        THERE ARE <span></span> ITEMS IN YOUR CART
+      </div>
+      <div class="cart-total-price"><span id="total-price"></span></div>
+    </div>
+    <div class="cart-bottom-r">
+      <a href="{% url 'checkout' %}">
+        <div class="cart-bottom-cehkout rounded-lg font-semibold text-white bg-gray-700 flex items-center justify-center transition-all">
+          <img src="{% static './assets/box.png' %}" alt="box" /> Proceed to
+          checkout
         </div>
+      </a>
+    </div>
+  </div>
+</div>

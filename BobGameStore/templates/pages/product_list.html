@@ -120,7 +120,7 @@
 
     <section>
         <div class="all-products-page">
-                        <div class="forMobile">
+            <div class="forMobile">
                             <div class="filterMobile">
 
                                 <div class="filterBtnMobile filterMobile__titles">
@@ -206,13 +206,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>            
 
             <div class="all-products-content">
-
                 <div class="all-products-group">
-                    {% for product in products %}
-
+                    {% for product in page_obj %}
                         <div class="product-box menu-item" data-menu-item-id="{{ product.id }}">
                             <a href="{% url 'product-detail' slug=product.slug %}">
                                 <div class="product-img sellers-box-img"
@@ -223,16 +221,69 @@
                             <div class="product-bottom">
                                 <div class="product-price sellers-box-price" data-menu-item-price="{{ product.price }}"><a href="{% url 'product-detail' slug=product.slug %}">{{ product.price }}</a></div>
                                 <div class="product-btn">
-                                    <button class="add-to-cart-btn addToCartBtn" data-menu-item="{{ product.id }}">
+                                    <button class="confirmBtn">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                     </button>
                                 </div>
                             </div>
-                        </div>
 
+                            <!-- Modal Background -->
+                            <div id="confirmModal-{{ product.id }}" class="hidden fixed inset-0 bg-gray-700 bg-opacity-60 flex items-center justify-center">
+                                <div class="bg-white p-5 rounded-lg shadow-lg max-w-sm w-full">
+                                    <h2 class="text-xl mb-4">Add to Cart</h2>
+                                    <p class="mb-4">Are you sure you want to add {{ product.title }} to the cart?</p>
+                                    <div class="flex justify-end">
+                                        <button class="cancelBtn bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                                        <button data-menu-item="{{ product.id }}" class="addToCartBtn bg-blue-500 text-white px-4 py-2 rounded">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
             </div>
+
+
+        <div class="container mx-auto px-4 my-8">
+            <nav class="flex flex-row flex-nowrap justify-between md:justify-center items-center" aria-label="Pagination">
+                {% if page_obj.has_previous %}
+                    <a class="flex w-10 h-10 mr-1 justify-center items-center rounded-full border border-gray-200 bg-white text-black hover:border-gray-300" href="?page=1{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" title="First Page">&laquo;</a>
+                    <a class="flex w-10 h-10 mr-1 justify-center items-center rounded-full border border-gray-200 bg-white text-black hover:border-gray-300" href="?page={{ page_obj.previous_page_number }}{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" title="Previous Page">
+                        <span class="sr-only">Previous Page</span>
+                        <svg class="block w-4 h-4 fill-current" viewBox="0 0 256 512" aria-hidden="true" role="presentation">
+                            <path d="M238.475 475.535l7.071-7.07c4.686-4.686 4.686-12.284 0-16.971L50.053 256 245.546 60.506c4.686-4.686 4.686-12.284 0-16.971l-7.071-7.07c-4.686-4.686-12.284-4.686-16.97 0L10.454 247.515c-4.686 4.686-4.686 12.284 0 16.971l211.051 211.05c4.686 4.686 12.284 4.686 16.97-.001z"></path>
+                        </svg>
+                    </a>
+                {% endif %}
+
+                {% for page_num in page_range %}
+                    {% if page_num == page_obj.number %}
+                        <a class="hidden md:flex w-10 h-10 mx-1 justify-center items-center rounded-full border border-black bg-black text-white pointer-events-none" href="#" aria-current="page" title="Page {{ page_num }}">
+                            {{ page_num }}
+                        </a>
+                    {% else %}
+                        <a class="hidden md:flex w-10 h-10 mx-1 justify-center items-center rounded-full border border-gray-200 bg-white text-black hover:border-gray-300" href="?page={{ page_num }}{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" title="Page {{ page_num }}">
+                            {{ page_num }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a class="flex w-10 h-10 ml-1 justify-center items-center rounded-full border border-gray-200 bg-white text-black hover:border-gray-300" href="?page={{ page_obj.next_page_number }}{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" title="Next Page">
+                        <span class="sr-only">Next Page</span>
+                        <svg class="block w-4 h-4 fill-current" viewBox="0 0 256 512" aria-hidden="true" role="presentation">
+                            <path d="M17.525 36.465l-7.071 7.07c-4.686 4.686-4.686 12.284 0 16.971L205.947 256 10.454 451.494c-4.686 4.686-4.686 12.284 0 16.971l7.071 7.07c4.686 4.686 12.284 4.686 16.97 0l211.051-211.05c4.686-4.686 4.686-12.284 0-16.971L34.495 36.465c-4.686-4.687-12.284-4.687-16.97 0z"></path>
+                        </svg>
+                    </a>
+                    <a class="flex w-10 h-10 ml-1 justify-center items-center rounded-full border border-gray-200 bg-white text-black hover:border-gray-300" href="?page={{ page_obj.paginator.num_pages }}{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" title="Last Page">
+                        <span class="sr-only">Last Page</span>
+                        &raquo;
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+
+
         </div>
     </section>
 
