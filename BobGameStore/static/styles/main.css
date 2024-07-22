@@ -851,7 +851,8 @@ body {
     height: 412px;
     background-position: center !important;
     background-repeat: no-repeat !important;
-    background-size: cover !important;
+    background-size: contain !important;
+    background-color: #fff !important;
     border-radius: 18px;
 }
 
