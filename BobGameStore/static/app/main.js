@@ -186,7 +186,7 @@ const hideButton = document.getElementById('hideBlockButton');
 
 if (showButton) {
     showButton.addEventListener('click', function () {
-        hiddenBlock.style.display = 'block';
+        hiddenBlock.style.display = 'flex';
     });
 
     hideButton.addEventListener('click', function () {
@@ -196,7 +196,7 @@ if (showButton) {
 
 if (showBlockButtonPhone) {
     showBlockButtonPhone.addEventListener('click', function () {
-        hiddenBlock.style.display = 'block';
+        hiddenBlock.style.display = 'flex';
     });
 
     hideButton.addEventListener('click', function () {
@@ -330,9 +330,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var itemTotalPrice = (itemPrice * itemQuantity).toFixed(2);
             var itemImage = item.image;
 
-            console.log(itemImage)
-
-
             var cartItemElement = document.createElement('div');
             cartItemElement.classList.add('cart-items-list', 'cart-product-item');
             cartItemElement.innerHTML = `
@@ -340,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="cart-table">
                     <div class="inline-detail">
                         <div class="cart-product-company"></div>
-                        <button class="delete-cart-item-btn" data-cart-item-id="${itemId}">x</button>
+                        <button class="delete-cart-item-btn flex items-center justify-center" data-cart-item-id="${itemId}">x</button>
                     </div>
                     <div class="cart-product-title">${itemName}</div>
                 </div>
